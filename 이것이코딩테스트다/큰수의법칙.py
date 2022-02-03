@@ -25,3 +25,5 @@ print(result)
 # m이 k의 배수인 경우, 나머지가 존재하지 않기 때문에, second * 0이 된다...
 
 answer = (m//k)*first + (m % k)*second
+
+#테스트
