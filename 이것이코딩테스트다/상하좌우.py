@@ -1,36 +1,23 @@
-# 구현 문제
-
-# R이면 열 + 1, D면 행 +1 , u는 행 -1, L는 열 -1
-# 만약 열이나 행 값이 0이되거나 행렬의 범위를 넘길시 무시한다.
-# C,R,U,D 각 케이스별로 나누어 준다.
-# 초기 행렬값 1,1
+# 책의 풀이
 
 n = int(input())
-schedule = list(input().split())
+plans = list(input().split())
 
 x, y = 1, 1
 
-for i in schedule:
-    if i == 'R':
-        if y+1 > n:
-            continue
-        else:
-            y += 1
-    elif i == 'L':
-        if y - 1 <= 0:
-            continue
-        else:
-            y -= 1
-    elif i == 'U':
-        if x - 1 <= 0:
-            continue
-        else:
-            x -= 1
-    else:
-        if x + 1 > n:
-            continue
-        else:
-            x += 1
+move_types = ['L', 'R', 'U', 'D']
+dx = [0, 0, -1, 1]
+dy = [-1, 1, 0, 0]
 
+for plan in plans:
+    for i in range(len(move_types)):
+        if plan == move_types[i]:
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+    if nx > n or nx < 1 or ny > n or ny < 1:
+        continue
+
+    x, y = nx, ny
 
 print(x, y)
