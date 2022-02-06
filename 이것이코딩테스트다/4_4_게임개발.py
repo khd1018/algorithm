@@ -1,55 +1,71 @@
 # 문제를 정확히 이해하고, 이를 어떻게 구현할지 명확히 한 후 코드 작성하자..
 # 도저히 안풀려서 책의 풀이를 참고해서 풀게되었다.
 
-
 n, m = map(int, input().split())
-row, column, direction = map(int, input().split())
-origin_dir = direction
+x, y, direction = map(int, input().split())
+
+# 방문한 위치를 저장하기 위한 맵을 생성
+d = [[0]*m for _ in range(n)]
+
+# 현재위치 방문 표시
+d[x][y] = 1
+
+map_arr = []
+for _ in range(n):
+    map_arr.append(list(map(int, input().split())))
+
+# 각 방향에서 x,y 이동하는 값 (북,동,남,서)
+dx = [-1, 0, 1, 0]
+dy = [0, 1, 0, -1]
+
+
+def turn_left():
+    # direction이 전역변수이기 때문에 global 키워드 사용
+    global direction
+    # 방향 틀면 현 방향 -1한 방향임!
+    direction -= 1
+    if direction == -1:
+        direction = 3
+
+
 count_move = 1
-# 0이면 3, 1이면 0, 2면 1, 3이면 2
-# 가보지 않은 칸이라... map의 숫자를 바꿔줘야하나
-
-dir_num = [0, 1, 2, 3]
-dir_turn = [3, 0, 1, 2]
-step = [(0, -1), (-1, 0), (0, 1), (1, 0)]
-back_step = [(1, 0), (0, -1), (-1, 0), (0, 1)]
-
-game_map = []
-
-for i in range(n):
-    map_data = list(map(int, input().split()))
-    game_map.append(map_data)
-
+turn_time = 0
 
 while True:
+    turn_left()
+    nx = x + dx[direction]
+    ny = y + dy[direction]
 
-    # 이게 문제엿구만.. 방향이 3인경우에 문제발생..! 왜냐,, for문을 다 돌았기 때문이다
-    for i in range(len(dir_num)):
-        # 방향확인하고 룰대로 이동
-        if direction == dir_num[i]:
-            direction = dir_turn[i]
-            n_row = row + step[i][0]
-            n_column = column + step[i][1]
-    # 이동한 칸이 가본 칸or 바다인지 확인
-    # 무한 루프 돌것 같더라..
-    if game_map[n_row][n_column] == 0:
-        row, column = n_row, n_column
-        game_map[row][column] = 2
+    if map_arr[nx][ny] == 0 and d[nx][ny] == 0:
+        d[nx][ny] = 1
         count_move += 1
-        origin_dir = direction
+        turn_time = 0
+        x = nx
+        y = ny
         continue
 
-    if origin_dir == direction:
-        for i in range(len(dir_num)):
-            if direction == dir_num[i]:
-                b_row = row + back_step[i][0]
-                b_column = column + back_step[i][1]
-        # 뒤로 이동할 수 없는 경우
-        if game_map[b_row][b_column] == 1:
-            break
+    else:
+        turn_time += 1
+    print(turn_time)
+    print(nx, ny)
+    if turn_time == 4:
+        # 반대방향으로 가려면 -1 곱해주면 됨
+        nx = x - dx[direction]
+        ny = y - dy[direction]
+
+        if map_arr[nx][ny] == 0:
+            x = nx
+            y = ny
         else:
-            row = b_row
-            column = b_column
+            break
+
+        turn_time = 0
 
 
 print(count_move)
+
+
+# 현재 방향에서 서쪽으로 방향 변경> 변경된 방향으로 이동 > 처음 가본 칸이거나 육지면 해당 칸으로 이동
+# 이미 방문한 칸이거나 바다이면, 다시 위의 과정 ㄱㄱ
+# 만약 네 면이 모두 가본 칸 or 바다이면 현재 방향 유지한채로 한칸 뒤로 이동,
+# 이 때 뒤쪽이 바다인 칸이면 종료.
