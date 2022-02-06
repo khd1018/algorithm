@@ -18,7 +18,6 @@ for plan in plans:
 
     if nx > n or nx < 1 or ny > n or ny < 1:
         continue
-
     x, y = nx, ny
 
 print(x, y)
