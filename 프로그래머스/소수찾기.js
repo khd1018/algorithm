@@ -1,66 +1,44 @@
 function solution(numbers) {
-    const numArr =numbers.split("") 
-    let primeCount = 0      // 소수 개수를 저장하는 변수
-    const warehouse= []     // 소수인 숫자를 저장하는 배열
+    const numArr = numbers.split("")
+    const permutationArr = [] // 가능한 모든 경우의 숫자를 저장하는 배열
+    let primeCount = 0 // 소수의 개수를 저장하는 변수
     
-    
-    // 사용된 숫자 삭제한 배열을 리턴하는 함수
-    const delelteEl = (arr,target)=>{
-        let targetIndx = 0
-        for(let i=0;i<arr.length;i++){
-            if(arr[i]===target){
-                targetIndx = i
-                break
-            }
-        }
-        return arr.filter((_,indx)=> indx!==targetIndx)
-    }
-    
-    // 재귀 함수 - 모든 케이스 돌면서 소수인지 체크
-    const allSearch = (ableNumArr,nowNum)=>{
+    // 가능한 모든 숫자 구함
+    for(let r=1;r<=numbers.length;r++){
+        const allPermutation = permutation(numArr,r).map((arr)=>{
+            return parseInt(arr.join(""))
+        })
         
-        if(isPrimeNum(nowNum)){
-            if(!warehouse.includes(nowNum)){              // 여기 조건을 설정하지 않아서 333과 같은 case에 결과가 3이 나옴..
-                warehouse.push(nowNum)
-                primeCount++
-            }
-        }
-        
-      // 재귀 종료 조건
-        if(nowNum.length===numbers.length){
-            return 
-        }
-        
-        // 재귀 돌리는 반복문
-        for(let i=0;i<ableNumArr.length;i++){
-             const newNum = nowNum + ableNumArr[i]
-             allSearch(delelteEl(ableNumArr,ableNumArr[i]),newNum) // 여기 오류 찾는데 시간 오래 걸림.. ableNumArr[i]에 newNum을 쓰고 있엇다..(삭제할 문자 잘못 설정함)
-        }
+        permutationArr.push(...allPermutation)
     }
-    
-    // 루트 케이스로 시작하게끔 하는 반복문
-    for(let i=0;i<numArr.length;i++){
-        if(numArr[i]!=='0'){
-            const ableNumArr = delelteEl(numArr,numArr[i])
-            allSearch(ableNumArr,numArr[i])
-        }
-    }
+   
+    // 중복된 숫자 제외한 나머지 숫자 중 소수의 개수 count
+   Array.from([...new Set(permutationArr)]).forEach((num)=>{
+        if(checkPrime(num)) primeCount ++
+    })
     
     return primeCount
-
 }
 
-// 소수판별 함수
-function isPrimeNum (num) {
+function permutation(arr, r) {
+    const result = []
     
-    const numb = parseInt(num)
-    for (let i = 2; i <= Math.sqrt(numb); i++) {
-        if (numb % i === 0) return false;
-    }
-    return numb >= 2;
+    if(r===1) return arr.map((num)=>[num])
+    
+    arr.forEach((fix,idx,org)=>{
+        const rest = [...org.slice(0,idx),...org.slice(idx+1)]
+        const permutations = permutation(rest,r-1) 
+        const attached = permutations.map((arr)=>[fix,...arr])
+        result.push(...attached)
+    })
+    
+    return result
     
 }
 
-
-// 돌아가긴 하는데.. 코드가 너무 길다
-// deleteEl도 줄일 수 잇는 방법이 있을 것 같고 permutation을 좀더 깔끔하게 구현할 방법도 있을 것 같다,,,
+function checkPrime(num) {
+  for (let i = 2; i <= Math.sqrt(num); i++) {
+    if (num % i === 0) return false;
+  }
+  return num >= 2;
+}
