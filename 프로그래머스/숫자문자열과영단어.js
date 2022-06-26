@@ -40,3 +40,4 @@ function solution(s) {
 
     return Number(answer);
 }
+
