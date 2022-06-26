@@ -1,21 +1,20 @@
-function overlap(arr){
+function countDuplicate (arr) {
+
     const answer = []
+    const numOfDuplicate = {}  // 숫자를 key, arr에서 해당 숫자의 개수를 value로 하는 객체
     
-    //obj : 숫자n의 개수를 저장하는 객체. 숫자 n을 key, n의 개수를 value
+    // 중복 숫자 count
+    arr.forEach((num)=>{
+
+        numOfDuplicate[num] = numOfDuplicate[num] + 1 || 1
+    })
     
-    const result= arr.reduce((obj,num)=>{
-        obj[num] = (obj[num]||0) + 1
-        return obj
-    },{})
-    
-    for(let num in result ){
-        if(result[num]>1){
-            answer.push(result[num])
+    // 객체를 순회하며 2 이상인 value만 answer에 push 
+    for(let num in numOfDuplicate){
+        if(numOfDuplicate[num]>1){
+            answer.push(numOfDuplicate[num])
         }
     }
-    return answer.length ? answer : -1
+    
+    return answer.length===0 ? [-1] : answer
 }
-
-
-// reduce와 객체를 사용하니 코드가 훨씬 깔끔해졌다.
-// 반복횟수도 줄어들었다. 
