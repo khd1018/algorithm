@@ -1,0 +1,26 @@
+function solution(progresses, speeds) {
+    //작업 완료된 순서대로 stack에 쌓기
+    // 5 10 1 1 20 1
+    
+    
+    const leftProgress= progresses.map((num,i)=> Math.ceil((100-num) / speeds[i]))
+    let maxNum = leftProgress[0]
+    let countWorks = 1
+    const answer = []
+    //739
+    for(let i=1;i<leftProgress.length; i++){
+        if(maxNum < leftProgress[i]){
+            maxNum = leftProgress[i]
+            answer.push(countWorks)
+            countWorks = 1
+            
+        }else{
+            countWorks += 1
+        }
+        if(i===leftProgress.length-1){
+            answer.push(countWorks)
+        }
+    }
+    return answer
+}
+
