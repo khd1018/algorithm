@@ -3,7 +3,7 @@
 // 하나의 큐의 합이 전체의 반이되게 만들면 되는 것을 깨닫지 못했다.. 
 
 // queue1Sum-= combined[pointer1++] 이런 방식으로 코드를 깔끔하게 만들 수 있다. 잘 활용하자!
-
+// 문제를 잘 읽자!!
 
 
 function solution(queue1, queue2) {
