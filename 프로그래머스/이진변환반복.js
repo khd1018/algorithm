@@ -1,38 +1,37 @@
-//배열순회 메서드 대신에 for문을 사용하니 maximum call stack 에러가 해결되었다.
-//메서드를 사용하면 callback 함수가 call stack에 많이 쌓이게 되어 발생하는 문제인 것 같다.
-//배열순회 메서드를 남발하지 말자..!!
-//늘 강조하지만 문제를 잘 읽자...
+//배열 메서드를 활용하지 못하기 때문에 굳이 배열로 변환하지 않아도 되어 문자열로 처리하게 수정하였다.
+//또, 0을 제거한 문자열의 길이를 이진수로 변환하여 이진변환을 하기 때문에, 그냥 1의 개수를 count해서 이를 이진수로 변환하게 바꿧다.
 
 
 function solution(s) {
-    const array = s.split("")
-    let changeCount = 0                 // 재귀횟수를 세는 변수를 상위 scope에 둬서 이진변환횟수를 count했다. 더 좋은 방법은 없을까? 
     
-    const binaryChange = (array)=>{
+    let changeCount = 0
+    
+    const binaryChange = (str)=>{
         
-        if(array.length===1 && array[0]==='1') return 0     // 종료조건
+        if(str==='1') return 0
         
         changeCount ++
-        let count = 0
-        const removedArray = []
+        let removeCount = 0
+        let oneCount = 0
         let isAllOne = true
         
         
-        for(let i=0; i<array.length;i++){               // 배열을 만들지 않고, 1의 개수만 세도 될 것 같다.
-            if(array[i]==='1'){
-                removedArray.push(1)
+        for(let i=0; i<str.length;i++){
+            if(str[i]==='1'){
+                oneCount++
                 continue
             }
-            count++
+            
+            removeCount++
         }
         
-        const changedArray=removedArray.length.toString(2).split("")
+        const changedStr=oneCount.toString(2)
         
         
-        return binaryChange(changedArray) + count
+        return binaryChange(changedStr) + removeCount
     }
     
-    const zeroCount = binaryChange(array)
+    const zeroCount = binaryChange(s)
     
     return [changeCount,zeroCount]
     
