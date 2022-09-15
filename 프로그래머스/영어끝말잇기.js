@@ -37,6 +37,33 @@ function solution(n, words) {
     
 }
 
+// indexOf 메서드를 사용한 코드
+
+function solution(n, words) {
+    
+    let lastWord = words[0]
+    let endIndex = 0
+    
+    for(let i=1;i<words.length;i++){
+        
+        const lastAlpha = lastWord.slice(-1)
+        
+        if(words.indexOf(words[i])!==i || lastAlpha!==words[i][0]){
+            
+            endIndex = i
+            break
+        }
+        
+        lastWord = words[i]
+        
+    }
+    
+    if(endIndex===0) return [0,0] 
+    
+    return [endIndex%n + 1,Math.ceil((endIndex+1)/n)]
+    
+}
+
 
 // 배열 마지막 요소 가져오는 방법
 // 1. Array.slice(-1)[0] 
