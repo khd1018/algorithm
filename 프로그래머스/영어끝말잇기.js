@@ -6,7 +6,12 @@
 // 종료조건 확인 방법 : includes 메서드를 활용, 단어가 이미 array에 포함되어 잇는지 확인 & array의 마지막 요소의 마지막 알파벳과 현재 words의 단어의 첫글자 같은지 확인
 
 
-// includes 메서드 사용한게 조금 걸림. words의 단어가 많은 경우 좋은 방법은 아닌 듯..
+// includes 메서드 사용한게 조금 걸림. words의 단어가 많은 경우 좋은 방법은 아닌 듯 하다.
+// indexOf()를 사용해 중복 단어를 찾는 방법도 있더라.. indexOf를 사용하는 걸 왜 생각못했지.. 이 방법이 굳이 배열 만들 필요도 없고 좋은 것 같다.
+
+// words.indexOf(words[i])가 현재 인덱스와 다른 경우 중복 단어임
+// words.slice(0,index).indexOf(words[i]) 이렇게 판별할 수도 있음. 이 경우 slice 메서드를 사용하기 때문에 위의 경우가 더 좋아 보임!
+
 
 function solution(n, words) {
     
