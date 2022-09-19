@@ -53,3 +53,19 @@ function solution(n,a,b)
     return matchCount
     
 }
+
+// 다른사람의 방법
+function solution(n,a,b)
+{
+    let answer = 0;
+    while(a !== b) {
+        a = Math.ceil(a/2);
+        b = Math.ceil(b/2);
+        answer++;
+    }
+
+    return answer;
+}
+
+// 거의 동일하지만 더 효율적이고 깔끔한 코드인 것 같다.
+// 푸는 것에 급급해하지 말자. 
