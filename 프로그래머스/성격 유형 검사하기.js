@@ -1,71 +1,44 @@
 const INDICATORS = [["R","T"],["C","F"],["J","M"],["A","N"]]
+const MIDPOINT = 4
 
 function solution(survey, choices) {
     
-    const scores = {
-        indicator1 : {
-            R :0,
-            T: 0,
-        },
-        
-        indicator2 : {
-            C :0,
-            F: 0,
-        },
-        
-        indicator3 : {
-            J :0,
-            M: 0,
-        },
-        
-        indicator4 : {
-            A :0,
-            N: 0,
-        },
-        
-    }
+    const scores = {}
     
-    survey.forEach((question,questionOrder)=>{
-        const choice =choices[questionOrder]
-        const selectedType = selectTypeByChoice(choice,question)
-        if(!selectedType){
+    INDICATORS.forEach(indicator=>{
+        indicator.forEach(type=> scores[type]=0)
+    })
+    
+    return getTestResult(getScore(survey,choices,scores))
+}
+
+
+const getScore = (survey,choices,scores)=>{
+    survey.forEach((surveyType,surveyOrder)=>{
+        const choice = choices[surveyOrder]
+        if(choice===MIDPOINT){
             return
         }
-        const indicator = "indicator"+checkIndicator(selectedType)
-        scores[indicator][selectedType] += giveScoreByChoice(choice) 
-    })
-    
-    return getResultBy(scores)
- 
-}
-
-const getResultBy = (scores)=>{
-    
-    const personalityTestResults = Object.values(scores).map((type)=>{
-         const scoresByType= Object.values(type)
-         const types = Object.keys(type)
-         if(scoresByType[0]===scoresByType[1]) return types[0]
         
-         return scoresByType[0]>scoresByType[1] ? types[0] : types[1]
+        scores[selectTypeBy(choice,surveyType)] += calculateScoreBy(choice)
     })
     
-    return personalityTestResults.join("")
+    return scores
 }
 
-const checkIndicator = (selectedType) =>{
+const getTestResult = (scores)=>{
+    const testResult = INDICATORS.map(([type1,type2])=>{
+        return scores[type2] > scores[type1] ? type2 : type1
+    })
     
-    for(let i=0; i<INDICATORS.length; i++){
-        if(INDICATORS[i].includes(selectedType)){
-            return i+1
-        }
-    }
+    return testResult.join("")
 }
 
-const selectTypeByChoice = (choice,qeustion)=>{
-    if(choice === 4 ) return 0
-    return choice > 4 ? qeustion[1] : qeustion[0]
+const selectTypeBy = (choice,surveyType)=>{
+    return choice > MIDPOINT ? surveyType[1] : surveyType[0]
+}
+    
+const calculateScoreBy = (choice)=> {
+    return Math.abs(choice - MIDPOINT)
 }
 
-const giveScoreByChoice = (choice)=>{
-    return Math.abs(choice - 4)
-}
