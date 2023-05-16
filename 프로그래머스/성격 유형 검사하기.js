@@ -2,6 +2,7 @@
 검사한 성격유형이 몇번 지표인지 확인
 점수가 4이면 패스, 4미만이면 왼쪽유형, 4초과이면 오른쪽유형 선택.
 몇점인지 점수 계산
+
 점수가 높은 유형을 최종 성격 유형으로 결정
 
 */
@@ -33,26 +34,34 @@ function solution(survey, choices) {
     
     survey.forEach((question,questionOrder)=>{
         const choice =choices[questionOrder]
-        if(choice===4) {
+        const selectedType = selectTypeByChoice(choice,question)
+        if(!selectedType){
             return
         }
-        
-        scores["indicator"+checkIndicator(question[0])][selectTypeByChoice(choice,question)] += giveScoreByChoice(choice) 
-        
+        const indicator = "indicator"+checkIndicator(question[0])
+        scores[indicator][selectedType] += giveScoreByChoice(choice) 
     })
     
-    return Object.values(scores).map((type,indicatorOrder)=>{
+    return getResultBy(scores)
+ 
+}
+
+const getResultBy = (scores)=>{
+    
+    const personalityTestResults = Object.values(scores).map((type,indicatorOrder)=>{
          const scoresByType= Object.values(type)
          const types = Object.keys(type)
          if(scoresByType[0]===scoresByType[1]) return types[0]
         
          return scoresByType[0]>scoresByType[1] ? types[0] : types[1]
-    }).join("")
- 
+    })
+    
+    return personalityTestResults.join("")
 }
 
 const checkIndicator = (type) =>{
     const INDICATORS = [["R","T"],["C","F"],["J","M"],["A","N"]]
+    
     for(let i=0; i<INDICATORS.length;i++){
         if(INDICATORS[i].includes(type)){
             return i+1
@@ -61,6 +70,7 @@ const checkIndicator = (type) =>{
 }
 
 const selectTypeByChoice = (choice,qeustion)=>{
+    if(choice === 4 ) return 0
     return choice > 4 ? qeustion[1] : qeustion[0]
 }
 
