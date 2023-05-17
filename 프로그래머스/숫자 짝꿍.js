@@ -11,49 +11,44 @@ X, Y의 짝꿍이 0으로만 구성되어 있다면, 짝꿍은 0
 
 function solution(X, Y) {
     
-    const objX = countDigit(X)
-    const objY = countDigit(Y)
+    const commonNumbers = []
+    let shorterInteger= X
+    let longerInteger = Y
     
-    const commonDigits =[...getCommonDigits(countDigit(X),countDigit(Y))]
+    if(X.length > Y.length){
+        shorterInteger = Y
+        longerInteger = X
+        
+    }
     
-    if(!commonDigits.length) return "-1"
-    if(commonDigits.every(commonDigit=> commonDigit==="0")) return "0"
+    for(const shorterNum of shorterInteger){
+        const indexOfSameNumber= getIndexOfSameNumber(shorterNum,longerInteger)
+        if(indexOfSameNumber === -1){
+            continue
+        }
+        commonNumbers.push(shorterNum)
+        longerInteger = longerInteger.slice(0,indexOfSameNumber) + longerInteger.slice(indexOfSameNumber+1,)
+        
+    }
     
-    return commonDigits.sort((a,b)=>b-a).join("")
+    if(!commonNumbers.length) return "-1"
+    if(commonNumbers.every(number=>number==="0")) return "0"
+    
+    return commonNumbers.sort((a,b)=>b-a).join("")
+    
 }
-
-const getCommonDigits = (objX,objY)=>{
-    const digitOfX = Object.keys(objX)
-    const commonDigits = []
+                            
+const getIndexOfSameNumber = (shorterNum,longerInteger)=>{
+    let indexOfSameNumber =  -1
     
-    digitOfX.forEach(digit=>{
-        if(objY[digit]){
-            let numberOfCommonDigits = 0
-            if(objX[digit]===objY[digit]) {
-                numberOfCommonDigits = objY[digit]
-                commonDigits.push(...Array(numberOfCommonDigits).fill(digit))
-                return
+    longerInteger.split("").some((longerNum,i)=>{
+            if(shorterNum === longerNum){
+                indexOfSameNumber = i
+                return true
             }
-            
-            numberOfCommonDigits = Math.min(objX[digit],objY[digit])
-            commonDigits.push(...Array(numberOfCommonDigits).fill(digit))
-        }
-    })
-    return commonDigits
-}
+            return false
+        })
+    
+    return indexOfSameNumber
+} 
 
-const countDigit = (integer)=>{
-    
-    const numberOfDigits = {}
-    const digits = integer.split("")
-    
-    digits.forEach(digit=>{
-        if(!numberOfDigits[digit]){
-            numberOfDigits[digit] = 1
-            return
-        }
-        numberOfDigits[digit] += 1
-    })
-    
-    return numberOfDigits
-}
