@@ -11,80 +11,51 @@ function solution(park, routes) {
     
     let [row,column] = [...findStartLocation(park)]
     const direction = {
-        W :  -1,
-        E : 1,
-        N : -1,
-        S : 1
+        W :  [0,-1],
+        E : [0,1],
+        N : [-1,0],
+        S : [1,0]
     }
     
     const routeArr = routes.map((route)=> route.split(" "))
     
-    routeArr.forEach(([op,n],index)=>{
-        let [tempRow,tempColumn]= [row,column]
+    routeArr.forEach(([op,n])=>{
+        const [dy,dx] = [...direction[op]]
         
-        if(op === "W" || op === "E"){
-            tempColumn += (direction[op] * n)
-            if(!isColumnMovable(row,column,tempColumn,park)){
+        for(let i=1;i<=n;i++){
+            const tempRow = (dy * i) + row
+            const tempColumn = (dx * i) + column 
+            
+            if(!canMove(tempRow,tempColumn,park)){     
                 return
             }
-            
-            column = tempColumn
-            
-        }else{
-            tempRow += (direction[op] * n)
-            if(!isRowMovable(row,column,tempRow,park)){
-                return
-            }
-            row = tempRow
         }
-       
+        
+        row = (dy * n) + row
+        column = (dx * n) + column 
     })
     
     return [row,column]
 }
 
-const isRowMovable = (row,column,tempRow,park)=>{
+const canMove = (tempRow,tempColumn,park)=>{
     
-    let y = row
-    const isBigger = row < tempRow
-    
-    while(isBigger? y<=tempRow : y>=tempRow){
-        
-        if(!park[y]){
-            return false
-        }
-        
-        if(park[y][column]==="X"){
-            return false
-        }
-        
-        isBigger ? y++ : y--
-        
+    if(!park[tempRow]){
+        return false
+    }
+
+    if(!park[tempRow][tempColumn]){
+        return false
+    }
+
+    if(park[tempRow][tempColumn] === "X"){
+        return false
     }
     
     return true
 }
 
-const isColumnMovable = (row,column,tempColumn,park)=>{
-    let x = column
-    const isBigger = column < tempColumn
-    while(isBigger? x <= tempColumn : x >= tempColumn){
-        
-        if(!park[row][x]){
-            return false
-        }
-        
-        if(park[row][x]==="X"){
-            return false
-        }
-        
-        isBigger ? x++ : x--
-        
-    }
-    
-    return true
 
-}
 
 const findStartLocation = (park)=>{
     
