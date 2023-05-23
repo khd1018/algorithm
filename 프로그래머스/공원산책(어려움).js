@@ -17,9 +17,8 @@ function solution(park, routes) {
         S : [1,0]
     }
     
-    const routeArr = routes.map((route)=> route.split(" "))
-    
-    routeArr.forEach(([op,n])=>{
+    routes.forEach(route=>{
+        const [op,n] = [...route.split(" ")]
         const [dy,dx] = [...direction[op]]
         
         for(let i=1;i<=n;i++){
@@ -30,7 +29,6 @@ function solution(park, routes) {
                 return
             }
         }
-        
         row = (dy * n) + row
         column = (dx * n) + column 
     })
@@ -55,24 +53,13 @@ const canMove = (tempRow,tempColumn,park)=>{
     return true
 }
 
-
-
 const findStartLocation = (park)=>{
-    
-    let [x,y] = [0,0]
-    
-    loop:
     for(let rowIndex=0; rowIndex<park.length; rowIndex++){
         const row = park[rowIndex]
-
-        for(let columnIndex=0; columnIndex<row.length; columnIndex++){
-            if(row[columnIndex]==="S"){
-                x = columnIndex
-                y =  rowIndex
-                break loop
-            }
+        const columnIndex = row.indexOf("S")
+        
+        if(columnIndex!==-1){
+            return [rowIndex,columnIndex]
         }
     }
-    
-    return [y,x]
 }
