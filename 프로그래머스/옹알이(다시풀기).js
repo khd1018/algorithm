@@ -17,7 +17,7 @@ function solution(babbling) {
             return
         }
         
-        if(!isContiuos(babble,possiblePronuns)){
+        if(isContiuos(babble,possiblePronuns)){
             return
         }
         
@@ -50,14 +50,11 @@ const checkSpeakable = (babble,possiblePronuns)=>{
 
 const isContiuos = (babble,possiblePronuns)=>{
     
-    return possiblePronuns.every((possiblePronun)=>{
+    return possiblePronuns.some((possiblePronun)=>{
         const regex = new RegExp(`(${possiblePronun})`+"\\1+","g")
         
-        if(regex.test(babble)){
-            return false
-        }
-        
-        return true
+        return regex.test(babble) ? true : false
     })
     
 }
+
