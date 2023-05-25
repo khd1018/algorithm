@@ -21,18 +21,10 @@ const getAllAlphabets = (skip)=>{
     for(let i=0;i<26;i++){
         const alphabet = String.fromCharCode(97+i)
         
-        if(isSkipAlpha(alphabet,skip)){
-            continue
+        if(!skip.includes(alphabet)){
+            alphabets.push(alphabet)
         }
-        
-        alphabets.push(alphabet)
     }
     
     return alphabets
-}
-
-
-const isSkipAlpha = (alpha,skip)=>{
-    
-    return skip.includes(alpha) ? true : false
 }
