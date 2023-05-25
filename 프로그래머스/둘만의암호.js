@@ -2,17 +2,14 @@ function solution(s, skip, index) {
     const alphabets = [...getAllAlphabets(skip)]
     const targetAlphabets = s.split("")
     
-    return targetAlphabets.map((targetAlphabet)=>{
+    const convertedS = targetAlphabets.map((targetAlphabet)=>{
         const targetIndex= alphabets.indexOf(targetAlphabet)
         const indexOfconverted = targetIndex + index
         
-        if(indexOfconverted<alphabets.length){
-            return alphabets[indexOfconverted]
-        }
-        
-         return alphabets[indexOfconverted%alphabets.length]
-        
-    }).join("")
+        return alphabets[ indexOfconverted % alphabets.length ]
+    })
+    
+    return convertedS.join("")
 }
 
 const getAllAlphabets = (skip)=>{
