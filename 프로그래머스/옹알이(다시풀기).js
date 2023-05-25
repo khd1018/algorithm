@@ -26,18 +26,16 @@ function solution(babbling) {
     
     return count
 }
-
 const isSpeakable = (babble,possiblePronuns)=>{
     
     let testWord = babble
     
     possiblePronuns.forEach(pronuns=>{
-         testWord = testWord.split(pronuns)
-             .join(" ")
-             .trim()
+        const regex = new RegExp(`(${pronuns})`,"g")
+         testWord = testWord.replace(regex," ").trim()
     })
-   
-    return testWord==="" ? true : false
+    
+    return testWord ? false : true
 }
 
 const isContiuos = (babble,possiblePronuns)=>{
