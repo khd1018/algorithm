@@ -13,7 +13,7 @@ function solution(babbling) {
     
     babbling.forEach(babble=>{
 
-        if(!checkSpeakable(babble,possiblePronuns)){
+        if(!isSpeakable(babble,possiblePronuns)){
             return
         }
         
@@ -27,25 +27,17 @@ function solution(babbling) {
     return count
 }
 
-
-const checkSpeakable = (babble,possiblePronuns)=>{
+const isSpeakable = (babble,possiblePronuns)=>{
     
-    if(!babble.length){
-        return true
-    }
+    let testWord = babble
     
-    for(let i=0; i<possiblePronuns.length; i++){
-        const lasts = babble.split(possiblePronuns[i])
-        
-        if(lasts[0]!==babble){
-            const rest = possiblePronuns.slice(i+1)
-            const isSpeakable = lasts.every((last)=>checkSpeakable(last,rest))
-            
-            return isSpeakable ? true : false
-        }
-    }
-    
-    return false
+    possiblePronuns.forEach(pronuns=>{
+         testWord = testWord.split(pronuns)
+             .join(" ")
+             .trim()
+    })
+   
+    return testWord==="" ? true : false
 }
 
 const isContiuos = (babble,possiblePronuns)=>{
