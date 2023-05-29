@@ -12,29 +12,20 @@ goal의 단어가 card1에 있는지 card2에 있는지 확인하고 인덱스�
 
 function solution(cards1, cards2, goal) {
     
-    let nowCard1Index = -1
-    let nowCard2Index = -1
+    const cardPack1 = [...cards1]
+    const cardPack2 = [...cards2]
     
-    const result = goal.every((word)=>{
-        const card1IndexOfWord= cards1.indexOf(word)
-        const card2IndexOfWord= cards2.indexOf(word)
-        
-        if(card1IndexOfWord === -1){
-            if(card2IndexOfWord - nowCard2Index !== 1){
-                return false
-            }
+    for(let word of goal){
+        if(cardPack1[0]===word){
+            cardPack1.shift()
             
-            nowCard2Index = card2IndexOfWord
+        }else if(cardPack2[0]===word){
+            cardPack2.shift()
+            
         }else{
-            if(card1IndexOfWord - nowCard1Index !==1){
-                return false
-            }
-            
-            nowCard1Index = card1IndexOfWord
+            return "No"
         }
-        
-        return true
-    })
+    }
     
-    return result ? "Yes" : "No"
+    return "Yes"
 }
