@@ -9,13 +9,7 @@ function solution(keymap, targets) {
     
     keymap.forEach(key=>{
         for(let i=0; i<key.length; i++){
-            if(!keyPushMap[key[i]]){
-                keyPushMap[key[i]] = i+1
-            }else{
-                if(keyPushMap[key[i]] > i){
-                    keyPushMap[key[i]] = i+1
-                }
-            }
+            keyPushMap[key[i]] = keyPushMap[key[i]] < i+1 ? keyPushMap[key[i]] : i+1
         }
     })
     
