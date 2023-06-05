@@ -1,39 +1,26 @@
 function solution(today, terms, privacies) { 
-    const categoryTerm = {}
+    const categoryTerm = {...makeTermObject(terms)}
     const result = []
     const [todayYY,todayMM,todayDD] = today.split(".").map(el=>+el)
     
-    terms.forEach(term=>{
-        const [category,period] = term.split(" ")
-        categoryTerm[category] = Number(period)
-    })
-    
     privacies.forEach((dataCase,caseOrder)=>{
         const [date,category] = dataCase.split(" ")
-        let [year,month,day] = date.split(".").map(el=>+el)
-        const period = categoryTerm[category]
+        const [registYear,registMonth,registDay] = date.split(".").map(el=>+el)
+        const [endYear,endMonth] = [...getEndDate(registYear,registMonth,categoryTerm[category])]
         
-        year += parseInt(period/12)
-        month += period%12
-        
-        if(month>12){
-            year++
-            month = month % 12
-        }
-        
-        if(year < todayYY){
+        if(endYear < todayYY){
             result.push(caseOrder+1)
             return
         }
         
-        if(year === todayYY){
-            if(month < todayMM ){
+        if(endYear === todayYY){
+            if(endMonth < todayMM ){
                 result.push(caseOrder+1)
                 return
             }
             
-            if(month === todayMM){
-                if(day <= todayDD ){
+            if(endMonth === todayMM){
+                if(registDay <= todayDD ){
                     result.push(caseOrder+1)
                 }
             }
@@ -42,3 +29,29 @@ function solution(today, terms, privacies) {
     
     return result
 }
+
+const makeTermObject = (terms)=>{
+    
+    const categoryTerm = {}
+    
+    terms.forEach(term=>{
+        const [category,period] = term.split(" ")
+        categoryTerm[category] = Number(period)
+    })
+    
+    return categoryTerm
+}
+
+const getEndDate = (year,month,period)=>{
+    
+    year += parseInt(period/12)
+    month += period%12
+        
+    if(month>12){
+        year++
+        month = month % 12
+    }
+    
+    return [year,month]
+}
+
