@@ -1,19 +1,20 @@
 function solution(priorities, location) {
     
-    const processes = priorities.map((_,i)=>i)
-    const answer = []
-    
-    while(processes.length){
-        const priorityOfProcess = priorities.shift()
-        const processName = processes.shift()
+    const completedProcess = []
+    const processes = priorities.map((priority,processName)=>{
+        return {processName,priority}
+    })
+
+    while(processes.length>0){
+        const targetProcess =  processes.shift()
+        const isBiggerPriorityLeft = processes.some(process=> process.priority > targetProcess.priority)
         
-        if(priorityOfProcess<Math.max(...priorities)){
-            processes.push(processName)
-            priorities.push(priorityOfProcess)
+        if(isBiggerPriorityLeft){
+            processes.push(targetProcess)
         }else{
-            answer.push(processName)
+            completedProcess.push(targetProcess.processName)
         }
     }
     
-    return answer.indexOf(location) + 1
+    return completedProcess.indexOf(location) + 1
 }
