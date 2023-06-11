@@ -1,24 +1,46 @@
 function solution(bridge_length, weight, truck_weights) {
-    let [tick, onBridge, weightOnBridge] = [0, [{weight:0, timeToOut: 0}], 0]
+
+    const trucks = truck_weights.map((weight)=>{
+      return {weight: weight,outTime : 0}  
+    } )
     
-    while(onBridge.length > 0 || truck_weights.length > 0){
-        
-        if(onBridge[0].timeToOut === tick) weightOnBridge -= onBridge.shift().weight
-      
-        if(weightOnBridge + truck_weights[0] <= weight){
-            weightOnBridge += truck_weights[0]
-            onBridge.push({weight: truck_weights.shift(), timeToOut: tick + bridge_length})
-        }else{
-            if(onBridge[0]){
-              tick = onBridge[0].timeToOut - 1 // 다리를 건너기 직전으로 시간 이동. (어차피 트럭이 건너기 전까지는 다른 트럭이 다리를 건너지 못하므로)
+    const totalTrucks = trucks.length
+    const passingTrucks = []
+    
+    let time = 1
+    let passingTrucksWeight = 0
+    let passedTruckCount = 0
+    
+    while(true){
+        if(passingTrucks.length){
+            if(passingTrucks[0].outTime === time){
+                const passedTruck = passingTrucks.shift()
+                passedTruckCount++
+                passingTrucksWeight -= passedTruck.weight
             }
         }
-        tick++
+        
+        if(passedTruckCount === totalTrucks){
+            return time
+        }
+        
+        if(trucks.length){            
+            if(!isBridgeFull(bridge_length,passingTrucks.length) && !isOverWeight(passingTrucksWeight,weight,trucks[0].weight)){
+                const target = {...trucks.shift()}
+                target.outTime = time + bridge_length
+                passingTrucks.push( target)
+                passingTrucksWeight += target.weight
+            }
+        }
+        
+        time++
     }
-    return tick
+}
+    
+const isBridgeFull= (bridge_length,passingTruckCount)=>{
+    return bridge_length === passingTruckCount 
 }
 
-
-// 다리를 건너는 트럭마다 나오는 시간이 다른 것을 어떻게 처리해야할 줄 몰랐는데 tick + bridge_length 이런 방법을 알게되었다.
-// 객체를 활용하자..
-
+const isOverWeight = (passingTrucksWeight,weight,truckWeight)=>{
+    return truckWeight+passingTrucksWeight > weight
+}
