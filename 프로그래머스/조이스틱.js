@@ -15,35 +15,38 @@ function solution(name) {
     if(!name.includes("A")){
         return totalUpDownCount + name.length - 1
     }
-    
-    return totalUpDownCount + getLeftRightCount(name)
+
+    return totalUpDownCount + Math.min(getLeftCount(name),getLeftCount([...name].reverse())+1)
 }
 
-const getLeftRightCount = (name)=>{
+const getLeftCount = (name)=>{
     
-    const nameLength = name.length
-    let lengthOfContinousA = 0
-    let firstIndexOfA = name.indexOf("A")
-    let lastIndexOfA = 0
+    const nameLength = name.length - 1
+    const leftCases = []
+    let rightCase = nameLength
     
-    for(let i=0; i<name.length; i++){
+    outer :
+    for(let i=1; i<=nameLength; i++){
         if(name[i] === "A"){
-            for(let j=firstIndexOfA+1; j< nameLength; j++){
-                if( name[j] !== "A" ){
-                    lastIndexOfA = i-1
-                    lengthOfContinousA = lastIndexOfA - firstIndexOfA + 1
+            for(let j=i+1; j<= nameLength; j++){
+                if(name[j]!=="A"){
+                    leftCases.push( 2*(i-1) + nameLength - (j-1) )
                     break
+                }else{
+                    if(j===nameLength){
+                        rightCase = i-1
+                        break outer
+                    }
                 }
+                
             }   
         }                
     }
     
-    if( firstIndexOfA - 1 < lengthOfContinousA ){
-        return (firstIndexOfA - 1) * 2 + nameLength - lastIndexOfA - 1 
-    }
-    
-    return nameLength - 1
+    return Math.min(...leftCases) < rightCase ? Math.min(...leftCases) : rightCase
 }
+
+
 
 const getUpDownCount = (alphabet)=>{
     const asciiOfAlphabet = alphabet.charCodeAt()
