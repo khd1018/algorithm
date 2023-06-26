@@ -1,40 +1,66 @@
 function solution(n, wires) {
     const result = []
     
-    wires.sort((a,b)=> a[0]-b[0])
-    wires.sort((a,b)=>a[1]-b[1])
-    
     if(n===2){
         return 0
     }
     
     wires.forEach((brokenWire,brokenWireIndex)=>{
-        const removedWires=[...wires.filter((_,index)=> index!==brokenWireIndex)]
-        const nodes1 = new Set([...removedWires[0]])
-        const nodes2 = new Set()
+        const removedWires = wires.filter((_,i)=> i!==brokenWireIndex)
+        const parents = [...unionParent(n,removedWires)]
+        const [powerGridA,powerGridB] = [...countChildNodes(parents)]
         
-        for(let row=1; row < removedWires.length; row++){
-            const [v1,v2] = removedWires[row]
-            
-            if(nodes1.has(v1)|| nodes1.has(v2)){
-                nodes1.add(v1).add(v2)
-            }else{
-                nodes2.add(v1).add(v2)
-            }
-        }
-        
-        if( nodes1.has(brokenWire[0])){
-            nodes1.add(brokenWire[0])
-            nodes2.add(brokenWire[1])
-        }else{
-            nodes1.add(brokenWire[1])
-            nodes2.add(brokenWire[0])
-        }
-
-        result.push( Math.abs( nodes1.size - nodes2.size ) )
-        
+        result.push( Math.abs( powerGridA - powerGridB ) )
     })
     
     return Math.min(...result)
+}
+
+const countChildNodes = (parents)=>{
     
+    const childCountOfParents = {}
+    
+    for(let i=1; i<parents.length; i++){
+        const parent = getParent(i,parents)
+        childCountOfParents[parent] =  childCountOfParents[parent] + 1 || 1
+    }
+    
+    return Object.values(childCountOfParents)
+}
+
+const unionParent = (n,removedWires)=>{
+    const parents = [...makeParent(n+1)]
+        
+    removedWires.forEach(([v1,v2])=>{
+        const v1Parent = getParent(v1,parents)
+        const v2Parent= getParent(v2,parents)
+            
+        if(v1Parent<v2Parent){
+            parents[v2] = v1Parent
+            parents[v2Parent] = v1Parent
+        }else{
+            parents[v1] = v2Parent
+            parents[v1Parent] = v2Parent
+        }
+    })
+    
+    return parents
+}
+
+const getParent = (v,parents)=> {
+    if(parents[v]===v){
+        return v
+    }
+
+    return getParent(parents[v],parents)
+}
+
+const makeParent = (n)=>{
+    const parents = new Array(n).fill(0)
+    
+    for(let i=1; i<n; i++){
+        parents[i] = i
+    }
+    
+    return parents
 }
