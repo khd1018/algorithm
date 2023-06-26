@@ -1,10 +1,6 @@
 function solution(n, wires) {
     const result = []
     
-    if(n===2){
-        return 0
-    }
-    
     wires.forEach((brokenWire,brokenWireIndex)=>{
         const removedWires = wires.filter((_,i)=> i!==brokenWireIndex)
         const parents = [...unionParent(n,removedWires)]
@@ -36,10 +32,8 @@ const unionParent = (n,removedWires)=>{
         const v2Parent= getParent(v2,parents)
             
         if(v1Parent<v2Parent){
-            parents[v2] = v1Parent
             parents[v2Parent] = v1Parent
         }else{
-            parents[v1] = v2Parent
             parents[v1Parent] = v2Parent
         }
     })
@@ -50,7 +44,7 @@ const unionParent = (n,removedWires)=>{
 const getParent = (v,parents)=> {
     if(parents[v]===v){
         return v
-    }
+    }    
 
     return getParent(parents[v],parents)
 }
