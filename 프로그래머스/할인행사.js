@@ -3,8 +3,10 @@ function solution(want, number, discount) {
     let result = 0
 
     for(let day=0; day < discount.length - 9 ; day++ ){
-        const numberOfDiscountItems = { ...getNumberOfDiscountItems( discount.slice(day,day+10) ) }
-        if( canBuyAllItems(want,purchaseList,numberOfDiscountItems) ){
+        const discountItems = discount.slice(day,day+10) 
+        const purchaseItems = {...purchaseList}
+        
+        if( canBuyAllItems(purchaseItems,discountItems) ){
             result++
         }
     }
@@ -12,8 +14,15 @@ function solution(want, number, discount) {
     return result
 }
     
-const canBuyAllItems = (want,purchaseList,numberOfDiscountItems)=>{
-    return want.every(item => purchaseList[item] === numberOfDiscountItems[item] )
+const canBuyAllItems = (purchaseItems,discountItems)=>{
+    
+    discountItems.forEach(item =>{
+        if(purchaseItems[item]){
+            purchaseItems[item]--
+        }
+    })
+    
+    return Object.values(purchaseItems).every(value=> value === 0 )
 }
 
 const makePurchaseList = (want, number)=>{
@@ -22,15 +31,4 @@ const makePurchaseList = (want, number)=>{
     want.forEach((item,index)=> purchaseList[item] = number[index] )
     
     return purchaseList
-}
-
-const getNumberOfDiscountItems = (discountItems)=>{
-    const numberOfDiscountItems = {}
-    
-    discountItems.forEach( item =>{
-        numberOfDiscountItems[item] = numberOfDiscountItems[item] + 1 || 1
-    })
-    
-    return numberOfDiscountItems
-    
 }
