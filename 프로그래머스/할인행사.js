@@ -16,13 +16,15 @@ function solution(want, number, discount) {
     
 const canBuyAllItems = (purchaseItems,discountItems)=>{
     
-    discountItems.forEach(item =>{
-        if(purchaseItems[item]){
-            purchaseItems[item]--
+    return discountItems.every(item =>{
+        if(!purchaseItems[item]){
+            return false
         }
+        
+        purchaseItems[item]--
+        return true
     })
     
-    return Object.values(purchaseItems).every(value=> value === 0 )
 }
 
 const makePurchaseList = (want, number)=>{
