@@ -1,24 +1,24 @@
-function solution(k, tangerine) {
-    const box = []
+function solution(capacityOfBox, tangerine) {
+    const numberOfTangerineByType = Object.values( countTangerineByType(tangerine) ).sort((a,b)=> b-a)
+    let box = 0
+    let typeCount = 0
+
+    for(let numberOfTangerine of numberOfTangerineByType){
+        box += numberOfTangerine
+        typeCount++
+
+        if( box >= capacityOfBox ){
+            return typeCount 
+        }
+    }
+}
+
+const countTangerineByType = (tangerine)=> {
     const numberOfTangerines = {}
     
     tangerine.forEach(type=>{
         numberOfTangerines[type] = numberOfTangerines[type] + 1 || 1
     })
     
-    const typeOfTangerine = Object.keys(numberOfTangerines).sort((a,b)=> numberOfTangerines[b] - numberOfTangerines[a])
-    let sum = 0
-    let count = 0
-    
-    for(let type of typeOfTangerine){
-        sum += numberOfTangerines[type]
-        count++
-        
-        if(sum>=k){
-            return count 
-        }
-    }
-    
-    
-    
+    return numberOfTangerines
 }
