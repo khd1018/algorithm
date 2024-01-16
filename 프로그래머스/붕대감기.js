@@ -18,34 +18,33 @@
 
 
 function solution(bandage, health, attacks) {
-    const [castTime,recoveryAmount,bonusRecovery] = bandage
     const totalAttackCount = attacks.length
+    const [castTime,recoveryAmount,bonusRecovery] = bandage
     
     let currentHealth = health
     let time = 1
-    let successCount = 0
+    let successTimeCount = 0
     let attackCount = 0
     
     while( currentHealth > 0 && attackCount < totalAttackCount ){
        
+        const [attackTime,damage] = [ ...attacks[attackCount] ]
         
-        if(time !== attacks[attackCount][0]){
-            successCount++
-            
-            if(successCount===castTime){
-                currentHealth+= bonusRecovery
-                successCount = 0
+        if( !isAttacked( time,attackTime ) ){
+            if( isCastingSucceed( ++successTimeCount,castTime ) ){
+                currentHealth += bonusRecovery
+                successTimeCount = 0
             }
             
-            currentHealth+= recoveryAmount
+            currentHealth += recoveryAmount
             
-            if(currentHealth>health){
+            if(isExceeded( health,currentHealth )){
                 currentHealth = health
             }
             
         }else{
-            currentHealth-=  attacks[attackCount][1]
-            successCount = 0
+            currentHealth -= damage
+            successTimeCount = 0
             attackCount++
         }
         
@@ -54,3 +53,16 @@ function solution(bandage, health, attacks) {
 
     return currentHealth > 0 ? currentHealth : -1
 }
+
+const isExceeded = (health,currentHealth)=>{
+    return currentHealth > health ? true : false
+}
+
+const isCastingSucceed = (successTimeCount,castTime)=>{
+    return successTimeCount===castTime
+}
+
+const isAttacked = (time,attackTime)=>{
+    return time === attackTime
+}
+
